@@ -1,9 +1,32 @@
 # KernelForge
 
-KernelForge is an independent LLVM compiler engineering project. M0 establishes
-an out-of-tree New Pass Manager plugin; M1 implements the read-only
-`kernel-access-report` analysis pass; M2 establishes correctness and
-compiler-output baselines. Later roadmap items remain proposals.
+## About
+
+KernelForge is an independent LLVM compiler engineering portfolio project. It
+demonstrates an out-of-tree LLVM plugin, analysis using LLVM's New Pass Manager,
+regression testing, and reproducible compiler-output investigations. It
+complements prior work on RISC-V Vector instruction semantics and simulator
+validation; this repository focuses on LLVM compiler behavior and does not
+implement RVV instruction semantics.
+
+The project is pinned to LLVM/Clang 23.1.6. Its implemented pass is
+read-only: it reports memory-access facts for a deliberately limited class of
+loops and does not transform IR or claim that a loop is vectorizable.
+
+## Project status
+
+- **M0/M1 — implemented:** an out-of-tree New Pass Manager plugin with the
+  `kernel-access-report` analysis pass and LLVM-style regression fixtures.
+- **M2 — recorded:** SAXPY, dot product, and three-point stencil correctness
+  tests and LLVM compiler-output baselines. No timing data was collected.
+- **M3a — research gate:** the saturating-conversion candidate remains on hold
+  pending controlled runtime evidence; no custom optimization was approved.
+- **M3b — backend study:** LLVM 23.1.6 RV64V lowering and QEMU functional
+  validation are recorded. No hardware or performance result is claimed.
+
+No custom optimizer has been implemented. See [design](docs/design.md), the
+[M2 baseline report](docs/m2-baseline.md), the [M3 design gate](docs/m3-design-gate.md),
+and the [M3b RVV report](docs/m3b-rvv-validation.md).
 
 ## Toolchain
 
@@ -121,10 +144,30 @@ compiler output from correctness results and performance measurements:
   performance thresholds.
 
 On this host, Clang's O2 and O3 vectorizer remarks report width 4 and interleave
-count 4 for all three kernels. These results make simple loop vectorization a
-poor M3 target; M3 should first identify a specific behavior the standard
-pipeline misses. M1 alias remarks remain pairwise alias-query results, not
-iteration-level dependence proofs.
+count 4 for all three kernels. These results do not justify a custom
+vectorization pass. The M3 design gate and subsequent conversion study are
+documented separately; M1 alias remarks remain pairwise alias-query results,
+not iteration-level dependence proofs.
+
+## M3b RV64V conversion study
+
+The M3b experiment compares a manually clamped float-to-int8 loop with the
+explicit `llvm.fptosi.sat` intrinsic under LLVM 23.1.6 for RV64GCV. It saves
+optimized IR, vectorization remarks, scalar-only and vector assembly,
+disassembly, and command/tool metadata. A freestanding harness checks
+hand-derived results under QEMU; the study contains no runtime timing and does
+not demonstrate performance on RISC-V hardware or the M1 Pro.
+
+Regenerate the compiler artifacts and optional QEMU correctness result from the
+repository root:
+
+```sh
+python3 experiments/riscv/generate.py
+python3 experiments/riscv/run_qemu.py
+```
+
+See [the experiment instructions](experiments/riscv/README.md) and [the M3b
+report](docs/m3b-rvv-validation.md) for prerequisites, exact flags, and limits.
 
 ## M0/M1 limits
 
@@ -133,6 +176,12 @@ loop shape. `NoAlias`, `MayAlias`, and `MustAlias` are pairwise alias-query
 results, not loop-dependence proofs. The pass does not identify vectorizable
 loops, predict performance, or change the program.
 
-M3 and later remain proposed work: selecting and validating a narrowly scoped
-transformation, examining RVV code generation, optional OpenCL/SPIR-V
-exploration, and preparing a reproducible portfolio release.
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the pinned toolchain, verification
+commands, and evidence standards used for changes to the pass and experiments.
+
+## License
+
+KernelForge is distributed under the [MIT License](LICENSE). LLVM is an external
+toolchain dependency and is not included in this repository.
