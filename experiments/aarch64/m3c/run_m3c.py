@@ -554,7 +554,9 @@ def main() -> None:
             "intrinsic_ns_per_call",
         ]
         with raw_path.open("w", newline="") as raw_file:
-            writer = csv.DictWriter(raw_file, fieldnames=raw_fields)
+            writer = csv.DictWriter(
+                raw_file, fieldnames=raw_fields, lineterminator="\n"
+            )
             writer.writeheader()
             writer.writerows({key: row[key] for key in raw_fields} for row in raw_rows)
 
