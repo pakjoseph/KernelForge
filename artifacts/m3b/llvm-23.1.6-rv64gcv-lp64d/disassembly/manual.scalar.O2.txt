@@ -1,0 +1,29 @@
+
+/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.scalar.O2.o:	file format elf64-littleriscv
+
+Disassembly of section .text:
+
+0000000000000000 <kernelforge_sat_i8_manual>:
+       0: c529         	beqz	a0, 0x4a <kernelforge_sat_i8_manual+0x4a>
+       2: 42fe06b7     	lui	a3, 0x42fe0
+       6: c3000737     	lui	a4, 0xc3000
+       a: f00687d3     	fmv.w.x	fa5, a3
+       e: f0070753     	fmv.w.x	fa4, a4
+      12: 9532         	add	a0, a0, a2
+      14: 0005a607     	flw	fa2, 0x0(a1)
+      18: a0c626d3     	feq.s	a3, fa2, fa2
+      1c: c28d         	beqz	a3, 0x3e <kernelforge_sat_i8_manual+0x3e>
+      1e: a0c796d3     	flt.s	a3, fa5, fa2
+      22: 20f786d3     	fmv.s	fa3, fa5
+      26: e299         	bnez	a3, 0x2c <kernelforge_sat_i8_manual+0x2c>
+      28: 20c606d3     	fmv.s	fa3, fa2
+      2c: a0e696d3     	flt.s	a3, fa3, fa4
+      30: 20e70653     	fmv.s	fa2, fa4
+      34: e299         	bnez	a3, 0x3a <kernelforge_sat_i8_manual+0x3a>
+      36: 20d68653     	fmv.s	fa2, fa3
+      3a: c02616d3     	fcvt.l.s	a3, fa2, rtz
+      3e: 00d60023     	sb	a3, 0x0(a2)
+      42: 0605         	addi	a2, a2, 0x1
+      44: 0591         	addi	a1, a1, 0x4
+      46: fca617e3     	bne	a2, a0, 0x14 <kernelforge_sat_i8_manual+0x14>
+      4a: 8082         	ret

@@ -1,0 +1,24 @@
+
+/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.scalar.O3.o:	file format elf64-littleriscv
+
+Disassembly of section .text:
+
+0000000000000000 <kernelforge_sat_i8_intrinsic>:
+       0: cd0d         	beqz	a0, 0x3a <kernelforge_sat_i8_intrinsic+0x3a>
+       2: c30006b7     	lui	a3, 0xc3000
+       6: 42fe0737     	lui	a4, 0x42fe0
+       a: f00687d3     	fmv.w.x	fa5, a3
+       e: f0070753     	fmv.w.x	fa4, a4
+      12: 9532         	add	a0, a0, a2
+      14: 0005a687     	flw	fa3, 0x0(a1)
+      18: 28f69653     	fmax.s	fa2, fa3, fa5
+      1c: 28e60653     	fmin.s	fa2, fa2, fa4
+      20: a0d6a6d3     	feq.s	a3, fa3, fa3
+      24: c0261753     	fcvt.l.s	a4, fa2, rtz
+      28: 40d006b3     	neg	a3, a3
+      2c: 8ef9         	and	a3, a3, a4
+      2e: 00d60023     	sb	a3, 0x0(a2)
+      32: 0605         	addi	a2, a2, 0x1
+      34: 0591         	addi	a1, a1, 0x4
+      36: fca61fe3     	bne	a2, a0, 0x14 <kernelforge_sat_i8_intrinsic+0x14>
+      3a: 8082         	ret

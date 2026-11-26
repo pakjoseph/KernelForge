@@ -1,0 +1,24 @@
+
+/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.O3.o:	file format elf64-littleriscv
+
+Disassembly of section .text:
+
+0000000000000000 <kernelforge_sat_i8_intrinsic>:
+       0: cd05         	beqz	a0, 0x38 <kernelforge_sat_i8_intrinsic+0x38>
+       2: 4681         	li	a3, 0x0
+       4: 0d157757     	vsetvli	a4, a0, e32, m2, ta, ma
+       8: 00269793     	slli	a5, a3, 0x2
+       c: 97ae         	add	a5, a5, a1
+       e: 0207e407     	vle32.v	v8, (a5)
+      12: 72841057     	vmfne.vv	v0, v8, v8
+      16: 0c807057     	vsetvli	zero, zero, e16, m1, ta, ma
+      1a: 4a8b9557     	vfncvt.rtz.x.f.w	v10, v8
+      1e: 0c707057     	vsetvli	zero, zero, e8, mf2, ta, ma
+      22: bea03457     	vnclip.wi	v8, v10, 0x0
+      26: 5c803457     	vmerge.vim	v8, v8, 0x0, v0
+      2a: 00d607b3     	add	a5, a2, a3
+      2e: 8d19         	sub	a0, a0, a4
+      30: 02078427     	vse8.v	v8, (a5)
+      34: 96ba         	add	a3, a3, a4
+      36: f579         	bnez	a0, 0x4 <kernelforge_sat_i8_intrinsic+0x4>
+      38: 8082         	ret

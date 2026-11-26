@@ -1,0 +1,486 @@
+{
+  "project": "KernelForge M3b RV64V conversion validation",
+  "llvm_version_required": "23.1.6",
+  "llvm_tools": {
+    "llvm-config": "23.1.6",
+    "clang": "Homebrew clang version 23.1.6",
+    "opt": "Homebrew LLVM version 23.1.6",
+    "llvm-as": "Homebrew LLVM version 23.1.6",
+    "llvm-mc": "Homebrew LLVM version 23.1.6",
+    "llvm-objdump": "Homebrew LLVM version 23.1.6"
+  },
+  "target_triple_argument": "riscv64-unknown-elf",
+  "normalized_ir_triple": "riscv64-unknown-unknown-elf",
+  "march": "rv64gcv",
+  "mabi": "lp64d",
+  "flags": [
+    "-target",
+    "riscv64-unknown-elf",
+    "-march=rv64gcv",
+    "-mabi=lp64d",
+    "-fno-fast-math"
+  ],
+  "scalar_codegen_flags": [
+    "-fno-vectorize",
+    "-fno-slp-vectorize"
+  ],
+  "fast_math": false,
+  "host": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "compiler_vectorization_and_loop_body": {
+    "manual.O2": {
+      "loop_label": ".LBB0_2",
+      "static_instructions_including_backedge": 20,
+      "backedge": "bnez\ta0, .LBB0_2",
+      "vector_store_instructions": [
+        "vse8.v"
+      ],
+      "outputs_per_iteration": "VL elements (one vector byte store)",
+      "vectorizer_remark": "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c:12:3: remark: vectorized loop (vectorization width: vscale x 4, interleaved count: 1) [-Rpass=loop-vectorize]\n   12 |   for (unsigned long i = 0; i < n; ++i) {\n      |   ^",
+      "maximum_outputs_per_iteration_at_vlen128": 8
+    },
+    "intrinsic.O2": {
+      "loop_label": ".LBB0_2",
+      "static_instructions_including_backedge": 15,
+      "backedge": "bnez\ta0, .LBB0_2",
+      "vector_store_instructions": [
+        "vse8.v"
+      ],
+      "outputs_per_iteration": "VL elements (one vector byte store)",
+      "vectorizer_remark": "remark: <unknown>:0:0: vectorized loop (vectorization width: vscale x 4, interleaved count: 1) [-Rpass=loop-vectorize]",
+      "maximum_outputs_per_iteration_at_vlen128": 8
+    },
+    "manual.O3": {
+      "loop_label": ".LBB0_2",
+      "static_instructions_including_backedge": 20,
+      "backedge": "bnez\ta0, .LBB0_2",
+      "vector_store_instructions": [
+        "vse8.v"
+      ],
+      "outputs_per_iteration": "VL elements (one vector byte store)",
+      "vectorizer_remark": "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c:12:3: remark: vectorized loop (vectorization width: vscale x 4, interleaved count: 1) [-Rpass=loop-vectorize]\n   12 |   for (unsigned long i = 0; i < n; ++i) {\n      |   ^",
+      "maximum_outputs_per_iteration_at_vlen128": 8
+    },
+    "intrinsic.O3": {
+      "loop_label": ".LBB0_2",
+      "static_instructions_including_backedge": 15,
+      "backedge": "bnez\ta0, .LBB0_2",
+      "vector_store_instructions": [
+        "vse8.v"
+      ],
+      "outputs_per_iteration": "VL elements (one vector byte store)",
+      "vectorizer_remark": "remark: <unknown>:0:0: vectorized loop (vectorization width: vscale x 4, interleaved count: 1) [-Rpass=loop-vectorize]",
+      "maximum_outputs_per_iteration_at_vlen128": 8
+    }
+  },
+  "counting_method": "Count assembly mnemonics from the line annotated as the LLVM inner-loop header through the conditional branch back to that label; directives, labels, and comments are excluded. This is a static count per loop iteration, not a dynamic instruction count or performance estimate.",
+  "vector_length_model": "LLVM reports vscale x 4 with interleave count 1. The loop uses AVL as the remaining element count and advances by VL; with the QEMU VLEN=128 configuration, VLMAX is 8 output bytes for e32,m2.",
+  "performance_measurements": "not measured",
+  "commands": {
+    "manual_frontend_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O0",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/manual.frontend.ll"
+      ]
+    ],
+    "manual_frontend_verify": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/manual.frontend.ll"
+      ]
+    ],
+    "verify_intrinsic_input": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-as",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.bc"
+      ]
+    ],
+    "manual.O2_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O2",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/manual.O2.ll"
+      ]
+    ],
+    "manual.O2_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/manual.O2.ll"
+      ]
+    ],
+    "manual.O2_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O2",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.O2.s"
+      ]
+    ],
+    "manual.O2_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.O2.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.O2.s"
+      ]
+    ],
+    "manual.O2_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.O2.o"
+      ]
+    ],
+    "manual.O2_scalar_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O2",
+        "-fno-vectorize",
+        "-fno-slp-vectorize",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.scalar.O2.s"
+      ]
+    ],
+    "manual.O2_scalar_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.scalar.O2.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.scalar.O2.s"
+      ]
+    ],
+    "manual.O2_scalar_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.scalar.O2.o"
+      ]
+    ],
+    "intrinsic.O2_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O2",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/intrinsic.O2.ll"
+      ]
+    ],
+    "intrinsic.O2_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/intrinsic.O2.ll"
+      ]
+    ],
+    "intrinsic.O2_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O2",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.O2.s"
+      ]
+    ],
+    "intrinsic.O2_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.O2.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.O2.s"
+      ]
+    ],
+    "intrinsic.O2_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.O2.o"
+      ]
+    ],
+    "intrinsic.O2_scalar_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O2",
+        "-fno-vectorize",
+        "-fno-slp-vectorize",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.scalar.O2.s"
+      ]
+    ],
+    "intrinsic.O2_scalar_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.scalar.O2.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.scalar.O2.s"
+      ]
+    ],
+    "intrinsic.O2_scalar_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.scalar.O2.o"
+      ]
+    ],
+    "manual.O3_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O3",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/manual.O3.ll"
+      ]
+    ],
+    "manual.O3_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/manual.O3.ll"
+      ]
+    ],
+    "manual.O3_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O3",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.O3.s"
+      ]
+    ],
+    "manual.O3_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.O3.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.O3.s"
+      ]
+    ],
+    "manual.O3_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.O3.o"
+      ]
+    ],
+    "manual.O3_scalar_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O3",
+        "-fno-vectorize",
+        "-fno-slp-vectorize",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/manual_sat_i8.c",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.scalar.O3.s"
+      ]
+    ],
+    "manual.O3_scalar_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.scalar.O3.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/manual.scalar.O3.s"
+      ]
+    ],
+    "manual.O3_scalar_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.scalar.O3.o"
+      ]
+    ],
+    "intrinsic.O3_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O3",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/intrinsic.O3.ll"
+      ]
+    ],
+    "intrinsic.O3_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/ir/intrinsic.O3.ll"
+      ]
+    ],
+    "intrinsic.O3_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O3",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.O3.s"
+      ]
+    ],
+    "intrinsic.O3_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.O3.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.O3.s"
+      ]
+    ],
+    "intrinsic.O3_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.O3.o"
+      ]
+    ],
+    "intrinsic.O3_scalar_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "riscv64-unknown-elf",
+        "-march=rv64gcv",
+        "-mabi=lp64d",
+        "-fno-fast-math",
+        "-O3",
+        "-fno-vectorize",
+        "-fno-slp-vectorize",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/riscv/intrinsic_sat_i8.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.scalar.O3.s"
+      ]
+    ],
+    "intrinsic.O3_scalar_llvm_mc_assembly_check": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-mc",
+        "--triple=riscv64-unknown-elf",
+        "-mattr=+m,+a,+f,+d,+c,+v",
+        "-filetype=obj",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.scalar.O3.o",
+        "/Users/josephpak/KernelForge/artifacts/m3b/llvm-23.1.6-rv64gcv-lp64d/assembly/intrinsic.scalar.O3.s"
+      ]
+    ],
+    "intrinsic.O3_scalar_llvm_objdump": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "-d",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/intrinsic.scalar.O3.o"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+
+/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3b-lgaa2ld2/manual.O2.o:	file format elf64-littleriscv
+
+Disassembly of section .text:
+
+0000000000000000 <kernelforge_sat_i8_manual>:
+       0: cd39         	beqz	a0, 0x5e <kernelforge_sat_i8_manual+0x5e>
+       2: 42fe06b7     	lui	a3, 0x42fe0
+       6: c3000737     	lui	a4, 0xc3000
+       a: f00687d3     	fmv.w.x	fa5, a3
+       e: f0070753     	fmv.w.x	fa4, a4
+      12: 4781         	li	a5, 0x0
+      14: 0d157857     	vsetvli	a6, a0, e32, m2, ta, ma
+      18: 00279893     	slli	a7, a5, 0x2
+      1c: 98ae         	add	a7, a7, a1
+      1e: 0208e507     	vle32.v	v10, (a7)
+      22: 76a7d057     	vmfgt.vf	v0, v10, fa5
+      26: 5ca6c657     	vmerge.vxm	v12, v10, a3, v0
+      2a: 6ec75057     	vmflt.vf	v0, v12, fa4
+      2e: 72a51457     	vmfne.vv	v8, v10, v10
+      32: 5cc74557     	vmerge.vxm	v10, v12, a4, v0
+      36: 0c807057     	vsetvli	zero, zero, e16, m1, ta, ma
+      3a: 4aab94d7     	vfncvt.rtz.x.f.w	v9, v10
+      3e: 0c707057     	vsetvli	zero, zero, e8, mf2, ta, ma
+      42: b29034d7     	vnsrl.wi	v9, v9, 0x0
+      46: 9e803057     	vmv1r.v	v0, v8
+      4a: 5c903457     	vmerge.vim	v8, v9, 0x0, v0
+      4e: 00f608b3     	add	a7, a2, a5
+      52: 41050533     	sub	a0, a0, a6
+      56: 02088427     	vse8.v	v8, (a7)
+      5a: 97c2         	add	a5, a5, a6
+      5c: fd45         	bnez	a0, 0x14 <kernelforge_sat_i8_manual+0x14>
+      5e: 8082         	ret

@@ -1,0 +1,1 @@
+remark: <unknown>:0:0: vectorized loop (vectorization width: vscale x 4, interleaved count: 1) [-Rpass=loop-vectorize]
