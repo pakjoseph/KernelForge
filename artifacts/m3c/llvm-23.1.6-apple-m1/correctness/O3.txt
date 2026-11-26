@@ -1,0 +1,1 @@
+PASS: 39 boundary inputs across 28 sizes plus both benchmark inputs; double-truncation scalar oracle

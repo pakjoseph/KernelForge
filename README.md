@@ -19,14 +19,17 @@ loops and does not transform IR or claim that a loop is vectorizable.
   `kernel-access-report` analysis pass and LLVM-style regression fixtures.
 - **M2 — recorded:** SAXPY, dot product, and three-point stencil correctness
   tests and LLVM compiler-output baselines. No timing data was collected.
-- **M3a — research gate:** the saturating-conversion candidate remains on hold
-  pending controlled runtime evidence; no custom optimization was approved.
+- **M3a/M3c — research:** the manual and explicit saturating-conversion forms
+  were compared on the M1 Pro. The tested synthetic workload shows a repeatable
+  runtime difference; no custom optimization has been implemented, and a
+  separate legality/design review is still required.
 - **M3b — backend study:** LLVM 23.1.6 RV64V lowering and QEMU functional
   validation are recorded. No hardware or performance result is claimed.
 
 No custom optimizer has been implemented. See [design](docs/design.md), the
 [M2 baseline report](docs/m2-baseline.md), the [M3 design gate](docs/m3-design-gate.md),
-and the [M3b RVV report](docs/m3b-rvv-validation.md).
+the [M3b RVV report](docs/m3b-rvv-validation.md), and the
+[M3c AArch64 runtime study](docs/m3c-aarch64-runtime-study.md).
 
 ## Toolchain
 
@@ -168,6 +171,16 @@ python3 experiments/riscv/run_qemu.py
 
 See [the experiment instructions](experiments/riscv/README.md) and [the M3b
 report](docs/m3b-rvv-validation.md) for prerequisites, exact flags, and limits.
+
+## M3c AArch64 runtime comparison
+
+The M3c study compares the manual and explicit saturating-conversion forms
+under LLVM/Clang 23.1.6 at O2 and O3 on the recorded M1 Pro. It includes
+independent-reference correctness results, optimized IR and assembly, and
+paired local timing samples with variability summaries. The result applies to
+the tested synthetic workload only; timings are not run in CI and do not
+establish application-level performance. See the [M3c report](docs/m3c-aarch64-runtime-study.md)
+and [reproduction instructions](experiments/aarch64/m3c/README.md).
 
 ## M0/M1 limits
 

@@ -122,13 +122,12 @@ change the M1 pass, M2 baselines, or implement a custom pass.
 
 ## Next step
 
-Keep the custom canonicalization on hold. The smallest next step for M3a's
-runtime question is a controlled A/B measurement on the M1 Pro using the
-existing AArch64 workload and pinned compiler, with warmups, repeated
-alternating runs, deterministic inputs, and checksums. RVV code shape does not
-answer whether either form is faster on the M1 Pro. If that study does not show
-a repeatable effect or a separate correctness-relevant gap, pivot to further
-backend validation without adding a custom optimization.
+The controlled M1 Pro comparison requested here was completed separately in
+[M3c](m3c-aarch64-runtime-study.md). It records a repeatable difference for
+the tested synthetic workload, but this RVV experiment itself contains no
+hardware timing. The custom canonicalization remains unimplemented pending a
+separate legality and design review; neither RVV instruction counts nor the
+M3c measurements alone establish an application-level benefit.
 
 ## Commands
 

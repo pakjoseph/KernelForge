@@ -1,0 +1,3 @@
+/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp:12:3: remark: vectorized loop (vectorization width: 16, interleaved count: 1) [-Rpass=loop-vectorize]
+   12 |   for (std::size_t i = 0; i < n; ++i) {
+      |   ^

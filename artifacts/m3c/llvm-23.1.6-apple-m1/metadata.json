@@ -1,0 +1,894 @@
+{
+  "project": "KernelForge M3c controlled AArch64 conversion comparison",
+  "recorded_at_utc": "2026-11-26T09:01:39+00:00",
+  "harness_commit": "7f0688827244cfcf2badcdd8d26f72f516cf148b",
+  "llvm_version_required": "23.1.6",
+  "llvm_prefix": "/opt/homebrew/Cellar/llvm/23.1.6",
+  "llvm_tools": {
+    "llvm-config": "23.1.6",
+    "clang": "Homebrew clang version 23.1.6",
+    "clang++": "Homebrew clang version 23.1.6",
+    "opt": "Homebrew LLVM version 23.1.6",
+    "llvm-as": "Homebrew LLVM version 23.1.6",
+    "llvm-objdump": "Homebrew LLVM version 23.1.6",
+    "llvm-nm": "llvm-nm, compatible with GNU nm (Homebrew LLVM version 23.1.6)"
+  },
+  "target": "arm64-apple-darwin25.6.0",
+  "cpu_tuning": "apple-m1",
+  "flags": [
+    "-target",
+    "arm64-apple-darwin25.6.0",
+    "-mcpu=apple-m1",
+    "-fno-fast-math"
+  ],
+  "optimization_levels": [
+    "O2",
+    "O3"
+  ],
+  "fast_math": false,
+  "lto": false,
+  "noinline_kernels": true,
+  "machine": {
+    "details": {
+      "Model Name": "MacBook Pro",
+      "Model Identifier": "MacBookPro18,3",
+      "Chip": "Apple M1 Pro",
+      "Total Number of Cores": "8 (6 Performance and 2 Efficiency)",
+      "Memory": "16 GB"
+    },
+    "system_profiler_exit_code": 0,
+    "source": "system_profiler SPHardwareDataType; only non-serial fields retained"
+  },
+  "platform": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "macos_version": "26.6.2",
+    "uname": "Darwin Josephs-MacBook-Pro.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:18:49 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T6000 arm64"
+  },
+  "runtime_environment": {
+    "before_measurement": {
+      "power_source": "Now drawing from 'AC Power'",
+      "thermal_telemetry_available": false,
+      "thermal_telemetry_note": "pmset -g therm did not expose thermal status"
+    },
+    "after_measurement": {
+      "power_source": "Now drawing from 'AC Power'",
+      "thermal_telemetry_available": false,
+      "thermal_telemetry_note": "pmset -g therm did not expose thermal status"
+    }
+  },
+  "m2_recorded_machine": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "macos_version": "26.6.2",
+    "model_name": "MacBook Pro",
+    "model_identifier": "MacBookPro18,3",
+    "chip": "Apple M1 Pro"
+  },
+  "kernel_sources": {
+    "manual": "experiments/aarch64/m3c/manual_kernel.cpp",
+    "explicit_sat_ir": "experiments/aarch64/m3c/intrinsic_kernel.ll",
+    "shared_harness": "experiments/aarch64/m3c/benchmark.cpp",
+    "reference": "double-precision std::trunc with cast only after int8 range check"
+  },
+  "correctness": {
+    "results": {
+      "O2": "PASS: 39 boundary inputs across 28 sizes plus both benchmark inputs; double-truncation scalar oracle\n",
+      "O3": "PASS: 39 boundary inputs across 28 sizes plus both benchmark inputs; double-truncation scalar oracle\n"
+    },
+    "edge_values": 39,
+    "sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      7,
+      8,
+      9,
+      15,
+      16,
+      17,
+      31,
+      32,
+      33,
+      63,
+      64,
+      65,
+      127,
+      128,
+      129,
+      255,
+      256,
+      257,
+      4095,
+      4096,
+      4097,
+      8388608
+    ]
+  },
+  "benchmark_method": {
+    "sizes": [
+      4096,
+      8388608
+    ],
+    "elements": {
+      "4096": "small repeated-array case; 16 KiB input + 8 KiB for both outputs = 24 KiB",
+      "8388608": "large case above M3a's 4097 maximum; 32 MiB input + 16 MiB for both outputs = 48 MiB"
+    },
+    "input": "deterministic thousandth-step values over [-160,160] with one edge-corpus value every 257 elements",
+    "warmup_pairs_per_process_and_size": 6,
+    "calibration_pairs_per_process_and_size": 5,
+    "target_sample_duration_ns": 20000000,
+    "repetitions": "ceil(target duration / slower median calibrated single-call time); same count for both variants",
+    "paired_samples_per_optimization_and_size": 40,
+    "order": "manual-first/intrinsic-first alternate within each process; second process starts with reversed order",
+    "timed_region": "kernel calls only; input generation, allocation, checks, clock-independent setup, checksums, and formatting are outside timing",
+    "clock": "std::chrono::steady_clock; elapsed batch nanoseconds divided by repetitions",
+    "output_consumption": "compare final output arrays and print FNV-1a checksums after timed loops",
+    "process_affinity": "not pinned; managed by macOS scheduler",
+    "sample_exclusions": "none",
+    "ci_note": "bootstrap CI is descriptive and may understate uncertainty from serial thermal or scheduler correlation"
+  },
+  "llvm_ir_evidence": {
+    "manual.frontend": {
+      "llvm_fptosi_sat_call_count": 0,
+      "ordinary_fptosi_opcode_count": 1,
+      "fcmp_instruction_count": 3,
+      "select_instruction_count": 0
+    },
+    "manual.aggressive-instcombine": {
+      "llvm_fptosi_sat_call_count": 0,
+      "ordinary_fptosi_opcode_count": 1,
+      "fcmp_instruction_count": 3,
+      "select_instruction_count": 0
+    },
+    "manual.O2": {
+      "llvm_fptosi_sat_call_count": 0,
+      "ordinary_fptosi_opcode_count": 3,
+      "fcmp_instruction_count": 9,
+      "select_instruction_count": 8
+    },
+    "intrinsic.O2": {
+      "llvm_fptosi_sat_call_count": 6,
+      "ordinary_fptosi_opcode_count": 0,
+      "fcmp_instruction_count": 0,
+      "select_instruction_count": 0
+    },
+    "manual.O3": {
+      "llvm_fptosi_sat_call_count": 0,
+      "ordinary_fptosi_opcode_count": 3,
+      "fcmp_instruction_count": 9,
+      "select_instruction_count": 8
+    },
+    "intrinsic.O3": {
+      "llvm_fptosi_sat_call_count": 6,
+      "ordinary_fptosi_opcode_count": 0,
+      "fcmp_instruction_count": 0,
+      "select_instruction_count": 0
+    },
+    "manual.default-O2": {
+      "llvm_fptosi_sat_call_count": 0,
+      "ordinary_fptosi_opcode_count": 3,
+      "fcmp_instruction_count": 9,
+      "select_instruction_count": 8
+    },
+    "manual.default-O3": {
+      "llvm_fptosi_sat_call_count": 0,
+      "ordinary_fptosi_opcode_count": 3,
+      "fcmp_instruction_count": 9,
+      "select_instruction_count": 8
+    }
+  },
+  "static_loop_instruction_counts": {
+    "manual.O2": [
+      {
+        "label": "LBB0_5",
+        "static_instructions_including_backedge": 11,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_5"
+      },
+      {
+        "label": "LBB0_12",
+        "static_instructions_including_backedge": 41,
+        "vector_output_bytes_per_iteration": 16,
+        "backedge": "b.ne\tLBB0_12"
+      },
+      {
+        "label": "LBB0_16",
+        "static_instructions_including_backedge": 15,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_16"
+      }
+    ],
+    "intrinsic.O2": [
+      {
+        "label": "LBB0_6",
+        "static_instructions_including_backedge": 73,
+        "vector_output_bytes_per_iteration": 64,
+        "backedge": "b.ne\tLBB0_6"
+      },
+      {
+        "label": "LBB0_10",
+        "static_instructions_including_backedge": 9,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_10"
+      },
+      {
+        "label": "LBB0_13",
+        "static_instructions_including_backedge": 9,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_13"
+      }
+    ],
+    "manual.O3": [
+      {
+        "label": "LBB0_5",
+        "static_instructions_including_backedge": 11,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_5"
+      },
+      {
+        "label": "LBB0_11",
+        "static_instructions_including_backedge": 41,
+        "vector_output_bytes_per_iteration": 16,
+        "backedge": "b.ne\tLBB0_11"
+      },
+      {
+        "label": "LBB0_15",
+        "static_instructions_including_backedge": 15,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_15"
+      }
+    ],
+    "intrinsic.O3": [
+      {
+        "label": "LBB0_6",
+        "static_instructions_including_backedge": 73,
+        "vector_output_bytes_per_iteration": 64,
+        "backedge": "b.ne\tLBB0_6"
+      },
+      {
+        "label": "LBB0_10",
+        "static_instructions_including_backedge": 9,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_10"
+      },
+      {
+        "label": "LBB0_13",
+        "static_instructions_including_backedge": 9,
+        "vector_output_bytes_per_iteration": 0,
+        "backedge": "b.ne\tLBB0_13"
+      }
+    ]
+  },
+  "linked_kernel_validation": {
+    "O2": {
+      "symbols_present": [
+        "_kernelforge_sat_i8_manual",
+        "_kernelforge_sat_i8_intrinsic"
+      ],
+      "manual_disassembly_sha256": "3f6f90f22cb2c7ac357c9f8dc9ab993b5234b84135010d35dad9599adb4e5417",
+      "intrinsic_disassembly_sha256": "45e1b75e43681fdcddae1b6e94ba7b7884472f1c653fe8bedb7cb709e548a128",
+      "distinct_disassembly_text": true,
+      "lto_enabled": false
+    },
+    "O3": {
+      "symbols_present": [
+        "_kernelforge_sat_i8_manual",
+        "_kernelforge_sat_i8_intrinsic"
+      ],
+      "manual_disassembly_sha256": "7b0c42e2a498cefee879eedad3c6bc656d670be6f8d03c57a7e1a039d2d3242e",
+      "intrinsic_disassembly_sha256": "779cb47988ec7ea8d494e5d7cd8247540961d8705c67248de7f4529d997b735a",
+      "distinct_disassembly_text": true,
+      "lto_enabled": false
+    }
+  },
+  "summary": {
+    "speedup_definition": "manual ns/call divided by intrinsic ns/call; >1 favors intrinsic",
+    "paired_samples_per_optimization_and_size": 40,
+    "confidence_interval": {
+      "method": "stratified percentile block bootstrap of paired ratios",
+      "block_length_pairs": 2,
+      "process_sessions": 2,
+      "replicates": 10000,
+      "seed": 20261126,
+      "level": 0.95
+    },
+    "results": {
+      "O2": {
+        "4096": {
+          "input_bytes": 16384,
+          "two_output_arrays_bytes": 8192,
+          "total_working_set_bytes": 24576,
+          "manual_ns_per_call": {
+            "median": 704.74,
+            "q1": 703.5799999999999,
+            "q3": 707.4975,
+            "iqr": 3.917500000000018,
+            "mad": 1.4700000000000273
+          },
+          "intrinsic_ns_per_call": {
+            "median": 299.96500000000003,
+            "q1": 299.16999999999996,
+            "q3": 300.21999999999997,
+            "iqr": 1.0500000000000114,
+            "mad": 0.7050000000000125
+          },
+          "paired_intrinsic_speedup": {
+            "median": 2.3541469772199695,
+            "q1": 2.3435654015565106,
+            "q3": 2.3580784750764474,
+            "iqr": 0.014513073519936803,
+            "mad": 0.008645434907300631,
+            "bootstrap_95_percent_ci": [
+              2.35169576560305,
+              2.3552093992310006
+            ]
+          },
+          "samples": 40,
+          "excluded_samples": 0
+        },
+        "8388608": {
+          "input_bytes": 33554432,
+          "two_output_arrays_bytes": 16777216,
+          "total_working_set_bytes": 50331648,
+          "manual_ns_per_call": {
+            "median": 1457096.7149999999,
+            "q1": 1450666.6425,
+            "q3": 1463223.1775,
+            "iqr": 12556.534999999916,
+            "mad": 6296.14000000013
+          },
+          "intrinsic_ns_per_call": {
+            "median": 642477.6799999999,
+            "q1": 635470.985,
+            "q3": 650837.09,
+            "iqr": 15366.104999999981,
+            "mad": 7303.569999999949
+          },
+          "paired_intrinsic_speedup": {
+            "median": 2.2709228320255836,
+            "q1": 2.2468636126934554,
+            "q3": 2.2891588953626294,
+            "iqr": 0.04229528266917404,
+            "mad": 0.01991391697192868,
+            "bootstrap_95_percent_ci": [
+              2.2518318702076483,
+              2.2866914469304467
+            ]
+          },
+          "samples": 40,
+          "excluded_samples": 0
+        }
+      },
+      "O3": {
+        "4096": {
+          "input_bytes": 16384,
+          "two_output_arrays_bytes": 8192,
+          "total_working_set_bytes": 24576,
+          "manual_ns_per_call": {
+            "median": 704.625,
+            "q1": 704.235,
+            "q3": 705.9300000000001,
+            "iqr": 1.69500000000005,
+            "mad": 0.5249999999999773
+          },
+          "intrinsic_ns_per_call": {
+            "median": 299.545,
+            "q1": 299.1125,
+            "q3": 300.735,
+            "iqr": 1.6225000000000023,
+            "mad": 0.5300000000000011
+          },
+          "paired_intrinsic_speedup": {
+            "median": 2.352939291959328,
+            "q1": 2.3432917395532304,
+            "q3": 2.3562049070689604,
+            "iqr": 0.012913167515729906,
+            "mad": 0.009176546503610439,
+            "bootstrap_95_percent_ci": [
+              2.346984749285995,
+              2.354936875211166
+            ]
+          },
+          "samples": 40,
+          "excluded_samples": 0
+        },
+        "8388608": {
+          "input_bytes": 33554432,
+          "two_output_arrays_bytes": 16777216,
+          "total_working_set_bytes": 50331648,
+          "manual_ns_per_call": {
+            "median": 1449412.21,
+            "q1": 1448151.7475,
+            "q3": 1452332.5925,
+            "iqr": 4180.844999999972,
+            "mad": 2105.640000000014
+          },
+          "intrinsic_ns_per_call": {
+            "median": 634958.3200000001,
+            "q1": 633312.52,
+            "q3": 642540.18,
+            "iqr": 9227.660000000033,
+            "mad": 3836.2849999999744
+          },
+          "paired_intrinsic_speedup": {
+            "median": 2.2836899198607656,
+            "q1": 2.2535556780496986,
+            "q3": 2.2906724389414674,
+            "iqr": 0.03711676089176885,
+            "mad": 0.013472581275404405,
+            "bootstrap_95_percent_ci": [
+              2.2600953286586725,
+              2.2877579922727316
+            ]
+          },
+          "samples": 40,
+          "excluded_samples": 0
+        }
+      }
+    }
+  },
+  "commands": {
+    "verify_intrinsic_input_llvm_as": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-as",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/intrinsic.bc"
+      ]
+    ],
+    "verify_intrinsic_input_opt": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll"
+      ]
+    ],
+    "manual_frontend_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O0",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.frontend.ll"
+      ]
+    ],
+    "manual_aggressive_instcombine": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=mem2reg,aggressive-instcombine",
+        "-S",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.frontend.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.aggressive-instcombine.ll"
+      ]
+    ],
+    "verify_manual_aggressive_instcombine": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.aggressive-instcombine.ll"
+      ]
+    ],
+    "manual.O2_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O2",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.O2.ll"
+      ]
+    ],
+    "manual.O2_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.O2.ll"
+      ]
+    ],
+    "manual.O2_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O2",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/assembly/manual.O2.s"
+      ]
+    ],
+    "intrinsic.O2_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O2",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/intrinsic.O2.ll"
+      ]
+    ],
+    "intrinsic.O2_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/intrinsic.O2.ll"
+      ]
+    ],
+    "intrinsic.O2_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O2",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/assembly/intrinsic.O2.s"
+      ]
+    ],
+    "manual.O3_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O3",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.O3.ll"
+      ]
+    ],
+    "manual.O3_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.O3.ll"
+      ]
+    ],
+    "manual.O3_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O3",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/assembly/manual.O3.s"
+      ]
+    ],
+    "intrinsic.O3_optimized_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O3",
+        "-Rpass=loop-vectorize",
+        "-S",
+        "-emit-llvm",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/intrinsic.O3.ll"
+      ]
+    ],
+    "intrinsic.O3_verify_ir": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/intrinsic.O3.ll"
+      ]
+    ],
+    "intrinsic.O3_assembly": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O3",
+        "-S",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/assembly/intrinsic.O3.s"
+      ]
+    ],
+    "manual_default_O2_pass_trace": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=default<O2>",
+        "-debug-pass-manager",
+        "-S",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.frontend.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.default-O2.ll"
+      ]
+    ],
+    "manual_default_O2_verify": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.default-O2.ll"
+      ]
+    ],
+    "manual_default_O3_pass_trace": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=default<O3>",
+        "-debug-pass-manager",
+        "-S",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.frontend.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.default-O3.ll"
+      ]
+    ],
+    "manual_default_O3_verify": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=verify",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m3c/llvm-23.1.6-apple-m1/ir/manual.default-O3.ll"
+      ]
+    ],
+    "manual.O2_object": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O2",
+        "-c",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/manual.O2.o"
+      ]
+    ],
+    "intrinsic.O2_object": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O2",
+        "-c",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/intrinsic.O2.o"
+      ]
+    ],
+    "benchmark_driver.O2_object": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O2",
+        "-c",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/benchmark.cpp",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2.o"
+      ]
+    ],
+    "benchmark.O2_link_no_lto": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O2",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2.o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/manual.O2.o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/intrinsic.O2.o",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2"
+      ]
+    ],
+    "benchmark.O2_linked_symbols": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-nm",
+        "-g",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2"
+      ]
+    ],
+    "benchmark.O2.disassemble._kernelforge_sat_i8_manual": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "--macho",
+        "--disassemble",
+        "--dis-symname",
+        "_kernelforge_sat_i8_manual",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2"
+      ]
+    ],
+    "benchmark.O2.disassemble._kernelforge_sat_i8_intrinsic": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "--macho",
+        "--disassemble",
+        "--dis-symname",
+        "_kernelforge_sat_i8_intrinsic",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2"
+      ]
+    ],
+    "manual.O3_object": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O3",
+        "-c",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/manual_kernel.cpp",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/manual.O3.o"
+      ]
+    ],
+    "intrinsic.O3_object": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O3",
+        "-c",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/intrinsic_kernel.ll",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/intrinsic.O3.o"
+      ]
+    ],
+    "benchmark_driver.O3_object": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-std=c++17",
+        "-O3",
+        "-c",
+        "/Users/josephpak/KernelForge/experiments/aarch64/m3c/benchmark.cpp",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3.o"
+      ]
+    ],
+    "benchmark.O3_link_no_lto": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang++",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-O3",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3.o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/manual.O3.o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/intrinsic.O3.o",
+        "-o",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3"
+      ]
+    ],
+    "benchmark.O3_linked_symbols": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-nm",
+        "-g",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3"
+      ]
+    ],
+    "benchmark.O3.disassemble._kernelforge_sat_i8_manual": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "--macho",
+        "--disassemble",
+        "--dis-symname",
+        "_kernelforge_sat_i8_manual",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3"
+      ]
+    ],
+    "benchmark.O3.disassemble._kernelforge_sat_i8_intrinsic": [
+      [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/llvm-objdump",
+        "--macho",
+        "--disassemble",
+        "--dis-symname",
+        "_kernelforge_sat_i8_intrinsic",
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3"
+      ]
+    ],
+    "benchmark.O2_correctness": [
+      [
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2",
+        "--correctness-only"
+      ]
+    ],
+    "benchmark.O3_correctness": [
+      [
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3",
+        "--correctness-only"
+      ]
+    ],
+    "benchmark.O2.timing_session": [
+      [
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2",
+        "--benchmark",
+        "20",
+        "0"
+      ],
+      [
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O2",
+        "--benchmark",
+        "20",
+        "1"
+      ]
+    ],
+    "benchmark.O3.timing_session": [
+      [
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3",
+        "--benchmark",
+        "20",
+        "0"
+      ],
+      [
+        "/var/folders/g2/3n8w8wxj6td9bb7w1z85rzcr0000gn/T/kernelforge-m3c-fj931ujs/benchmark.O3",
+        "--benchmark",
+        "20",
+        "1"
+      ]
+    ]
+  }
+}

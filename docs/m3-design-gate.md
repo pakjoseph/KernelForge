@@ -6,8 +6,16 @@
 show a missed basic optimization, and the candidate transformations reviewed
 here either already exist in LLVM 23.1.6 or are not exposed by the current
 workload. The artifacts contain no performance measurements, so they cannot
-support a profitability claim. This document is a research decision only; no
-pass, test, build rule, or M2 artifact was changed for M3.
+support a profitability claim at the time of this decision. This document
+records a research decision only; no pass, test, build rule, or M2 artifact was
+changed for M3.
+
+**Follow-up evidence:** the conversion study requested below was carried out in
+[M3c](m3c-aarch64-runtime-study.md). It found a repeatable AArch64 runtime
+difference for the tested manual and intrinsic forms and confirmed that the
+tested manual int8 pattern remains distinct through LLVM 23.1.6's default
+O2/O3 pipelines. That evidence makes the narrow conversion pattern suitable
+for a separate legality/design review; it does not implement or approve a pass.
 
 ## Evidence reviewed
 
@@ -199,17 +207,15 @@ not inspect those source bodies; the source links identify the exact tagged
 files, while the installed 23.1.6 binary probes above establish the overlap
 observations used for this decision.
 
-## Next research step
+## Next research step at the time of this review
 
-Do not start a custom transform from the current evidence. If pursuing a new
-candidate, the smallest focused study is the saturating conversion workload
-described above: the current suite cannot expose conversion canonicalization,
-and an existing LLVM pass already recognizes one relevant IR pattern. The
-study should first establish whether real source IR reaches that pattern and
-whether the standard pipeline leaves a reproducible code-generation gap.
+At the time of the original review, do not start a custom transform from the
+M2 evidence. The smallest focused study was the saturating conversion workload
+described above. M3c has now completed that compiler-output and runtime study;
+see its report for the bounded result and limitations. The next step is a
+separate legality/design review before any implementation.
 
-If runtime performance is the proposed benefit, collect controlled local
-measurements on the same M1 Pro with identical inputs and flags, warmups,
-repeated runs, and summarized variability. Keep timing out of CI and make no
-performance claim until the result is repeatable. Correctness and IR legality
-must be established independently of timing.
+The M3c measurements do not replace semantic proof or establish a general
+application benefit. Keep timing out of CI. A future pass design must still
+specify its supported input pattern, semantic preconditions, rejection cases,
+and independent correctness tests.

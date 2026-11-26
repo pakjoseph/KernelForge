@@ -1,0 +1,281 @@
+Running pass: MemProfRemoveInfo on [module]
+Running pass: Annotation2MetadataPass on [module]
+Running pass: ForceFunctionAttrsPass on [module]
+Running pass: InferFunctionAttrsPass on [module]
+Running analysis: InnerAnalysisManagerProxy<FunctionAnalysisManager, Module> on [module]
+Running pass: CoroEarlyPass on [module]
+Running pass: EntryExitInstrumenterPass on kernelforge_sat_i8_manual (50 instructions)
+Running pass: LowerExpectIntrinsicPass on kernelforge_sat_i8_manual (50 instructions)
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (50 instructions)
+Running analysis: TargetIRAnalysis on kernelforge_sat_i8_manual
+Running analysis: AssumptionAnalysis on kernelforge_sat_i8_manual
+Running pass: SROAPass on kernelforge_sat_i8_manual (50 instructions)
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running pass: EarlyCSEPass on kernelforge_sat_i8_manual (26 instructions)
+Running analysis: TargetLibraryAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running pass: OpenMPOptPass on [module]
+Running pass: IPSCCPPass on [module]
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running pass: CalledValuePropagationPass on [module]
+Running pass: GlobalOptPass on [module]
+Running pass: PromotePass on kernelforge_sat_i8_manual (26 instructions)
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (26 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running analysis: OptimizationRemarkEmitterAnalysis on kernelforge_sat_i8_manual
+Running analysis: AAManager on kernelforge_sat_i8_manual
+Running analysis: BasicAA on kernelforge_sat_i8_manual
+Running analysis: ScopedNoAliasAA on kernelforge_sat_i8_manual
+Running analysis: TypeBasedAA on kernelforge_sat_i8_manual
+Running analysis: OuterAnalysisManagerProxy<ModuleAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (26 instructions)
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: AAManager on kernelforge_sat_i8_manual
+Running pass: AlwaysInlinerPass on [module]
+Running analysis: ProfileSummaryAnalysis on [module]
+Running pass: ModuleInlinerWrapperPass on [module]
+Running analysis: InlineAdvisorAnalysis on [module]
+Running pass: RequireAnalysisPass<llvm::GlobalsAA, llvm::Module, llvm::AnalysisManager<Module>> on [module]
+Running analysis: GlobalsAA on [module]
+Running analysis: CallGraphAnalysis on [module]
+Running pass: InvalidateAnalysisPass<llvm::AAManager> on kernelforge_sat_i8_manual (22 instructions)
+Running pass: RequireAnalysisPass<llvm::ProfileSummaryAnalysis, llvm::Module, llvm::AnalysisManager<Module>> on [module]
+Running analysis: InnerAnalysisManagerProxy<CGSCCAnalysisManager, Module> on [module]
+Running analysis: LazyCallGraphAnalysis on [module]
+Running analysis: FunctionAnalysisManagerCGSCCProxy on (kernelforge_sat_i8_manual)
+Running analysis: OuterAnalysisManagerProxy<ModuleAnalysisManager, LazyCallGraph::SCC, LazyCallGraph &> on (kernelforge_sat_i8_manual)
+Running pass: DevirtSCCRepeatedPass on (kernelforge_sat_i8_manual) (1 node)
+Running pass: InlinerPass on (kernelforge_sat_i8_manual) (1 node)
+Running pass: PostOrderFunctionAttrsPass on (kernelforge_sat_i8_manual) (1 node)
+Running pass: OpenMPOptCGSCCPass on (kernelforge_sat_i8_manual) (1 node)
+Running pass: SROAPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running pass: EarlyCSEPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Running analysis: AAManager on kernelforge_sat_i8_manual
+Running analysis: BasicAA on kernelforge_sat_i8_manual
+Running pass: SpeculativeExecutionPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: JumpThreadingPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: LazyValueAnalysis on kernelforge_sat_i8_manual
+Running pass: CorrelatedValuePropagationPass on kernelforge_sat_i8_manual (22 instructions)
+Invalidating analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LazyValueAnalysis on kernelforge_sat_i8_manual
+Running pass: JumpTableToSwitchPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: AggressiveInstCombinePass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: LibCallsShrinkWrapPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: TailCallElimPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: ReassociatePass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: ConstraintEliminationPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Running analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Running pass: LoopSimplifyPass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: LCSSAPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Running analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: LoopInstSimplifyPass on loop %<unnamed loop> in function kernelforge_sat_i8_manual
+Running pass: LoopSimplifyCFGPass on loop %<unnamed loop> in function kernelforge_sat_i8_manual
+Running pass: LICMPass on loop %<unnamed loop> in function kernelforge_sat_i8_manual
+Running pass: LoopRotatePass on loop %<unnamed loop> in function kernelforge_sat_i8_manual
+Running pass: LICMPass on loop %<unnamed loop> in function kernelforge_sat_i8_manual
+Running pass: SimpleLoopUnswitchPass on loop %<unnamed loop> in function kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (24 instructions)
+Clearing all analysis results for: <possibly invalidated loop>
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: AAManager on kernelforge_sat_i8_manual
+Invalidating analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running analysis: AAManager on kernelforge_sat_i8_manual
+Running analysis: BasicAA on kernelforge_sat_i8_manual
+Running pass: LoopSimplifyPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: LCSSAPass on kernelforge_sat_i8_manual (24 instructions)
+Running analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Running analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: LoopIdiomRecognizePass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: IndVarSimplifyPass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: LoopIdiomVectorizePass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running analysis: OuterAnalysisManagerProxy<FunctionAnalysisManager, Loop, LoopStandardAnalysisResults &> on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: LoopDeletionPass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: LoopFullUnrollPass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: SROAPass on kernelforge_sat_i8_manual (24 instructions)
+Running pass: VectorCombinePass on kernelforge_sat_i8_manual (24 instructions)
+Running pass: MergedLoadStoreMotionPass on kernelforge_sat_i8_manual (24 instructions)
+Clearing all analysis results for: <possibly invalidated loop>
+Invalidating analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: GVNPass on kernelforge_sat_i8_manual (23 instructions)
+Running analysis: MemoryDependenceAnalysis on kernelforge_sat_i8_manual
+Running pass: SCCPPass on kernelforge_sat_i8_manual (23 instructions)
+Running pass: BDCEPass on kernelforge_sat_i8_manual (23 instructions)
+Running analysis: DemandedBitsAnalysis on kernelforge_sat_i8_manual
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (23 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: MemoryDependenceAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: DemandedBitsAnalysis on kernelforge_sat_i8_manual
+Running pass: DFAJumpThreadingPass on kernelforge_sat_i8_manual (23 instructions)
+Running pass: JumpThreadingPass on kernelforge_sat_i8_manual (23 instructions)
+Running analysis: LazyValueAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: CorrelatedValuePropagationPass on kernelforge_sat_i8_manual (21 instructions)
+Invalidating analysis: LazyValueAnalysis on kernelforge_sat_i8_manual
+Running pass: ADCEPass on kernelforge_sat_i8_manual (21 instructions)
+Running analysis: PostDominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running pass: MemCpyOptPass on kernelforge_sat_i8_manual (21 instructions)
+Running analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Running pass: DSEPass on kernelforge_sat_i8_manual (21 instructions)
+Running analysis: CycleAnalysis on kernelforge_sat_i8_manual
+Running pass: MoveAutoInitPass on kernelforge_sat_i8_manual (21 instructions)
+Running pass: LoopSimplifyPass on kernelforge_sat_i8_manual (21 instructions)
+Running analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: PostDominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: CycleAnalysis on kernelforge_sat_i8_manual
+Running pass: LCSSAPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Running analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: LICMPass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: CoroElidePass on kernelforge_sat_i8_manual (22 instructions)
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (22 instructions)
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: AAManager on kernelforge_sat_i8_manual
+Invalidating analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (20 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running analysis: AAManager on kernelforge_sat_i8_manual
+Running analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: AAManager on kernelforge_sat_i8_manual
+Running pass: PostOrderFunctionAttrsPass on (kernelforge_sat_i8_manual) (1 node)
+Running analysis: AAManager on kernelforge_sat_i8_manual
+Running analysis: BasicAA on kernelforge_sat_i8_manual
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running pass: RequireAnalysisPass<llvm::ShouldNotRunFunctionPassesAnalysis, llvm::Function, llvm::AnalysisManager<Function>> on kernelforge_sat_i8_manual (20 instructions)
+Running analysis: ShouldNotRunFunctionPassesAnalysis on kernelforge_sat_i8_manual
+Running pass: CoroSplitPass on (kernelforge_sat_i8_manual) (1 node)
+Running pass: CoroAnnotationElidePass on (kernelforge_sat_i8_manual) (1 node)
+Invalidating analysis: CallGraphAnalysis on [module]
+Running pass: InvalidateAnalysisPass<llvm::ShouldNotRunFunctionPassesAnalysis> on kernelforge_sat_i8_manual (20 instructions)
+Invalidating analysis: ShouldNotRunFunctionPassesAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: InlineAdvisorAnalysis on [module]
+Running pass: DeadArgumentEliminationPass on [module]
+Running pass: CoroCleanupPass on [module]
+Running pass: GlobalOptPass on [module]
+Running pass: GlobalDCEPass on [module]
+Running pass: EliminateAvailableExternallyPass on [module]
+Running pass: ReversePostOrderFunctionAttrsPass on [module]
+Running pass: RecomputeGlobalsAAPass on [module]
+Running analysis: CallGraphAnalysis on [module]
+Running pass: DropUnnecessaryAssumesPass on kernelforge_sat_i8_manual (20 instructions)
+Running pass: Float2IntPass on kernelforge_sat_i8_manual (20 instructions)
+Running pass: LowerConstantIntrinsicsPass on kernelforge_sat_i8_manual (20 instructions)
+Running pass: LoopSimplifyPass on kernelforge_sat_i8_manual (20 instructions)
+Running analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Running pass: LCSSAPass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Running analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: LoopRotatePass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: LoopDeletionPass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: LoopInterchangePass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: LoopDistributePass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: LoopAccessAnalysis on kernelforge_sat_i8_manual
+Running pass: InjectTLIMappings on kernelforge_sat_i8_manual (22 instructions)
+Running pass: LoopVectorizePass on kernelforge_sat_i8_manual (22 instructions)
+Running analysis: DemandedBitsAnalysis on kernelforge_sat_i8_manual
+Running analysis: BlockFrequencyAnalysis on kernelforge_sat_i8_manual
+Running analysis: BranchProbabilityAnalysis on kernelforge_sat_i8_manual
+Running analysis: PostDominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running analysis: ShouldRunExtraVectorPasses on kernelforge_sat_i8_manual
+Clearing all analysis results for: <possibly invalidated loop>
+Invalidating analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Invalidating analysis: DemandedBitsAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: PostDominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BranchProbabilityAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BlockFrequencyAnalysis on kernelforge_sat_i8_manual
+Running pass: DropUnnecessaryAssumesPass on kernelforge_sat_i8_manual (77 instructions)
+Running pass: InferAlignmentPass on kernelforge_sat_i8_manual (77 instructions)
+Running pass: LoopLoadEliminationPass on kernelforge_sat_i8_manual (77 instructions)
+Invalidating analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LoopAccessAnalysis on kernelforge_sat_i8_manual
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (78 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (77 instructions)
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: AAManager on kernelforge_sat_i8_manual
+Invalidating analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: SLPVectorizerPass on kernelforge_sat_i8_manual (73 instructions)
+Running analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Running analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Running analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Running analysis: AAManager on kernelforge_sat_i8_manual
+Running analysis: BasicAA on kernelforge_sat_i8_manual
+Running analysis: DemandedBitsAnalysis on kernelforge_sat_i8_manual
+Running pass: VectorCombinePass on kernelforge_sat_i8_manual (73 instructions)
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (73 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: LoopUnrollPass on kernelforge_sat_i8_manual (73 instructions)
+Invalidating analysis: DemandedBitsAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: WarnMissedTransformationsPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: SROAPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: InferAlignmentPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: InstCombinePass on kernelforge_sat_i8_manual (76 instructions)
+Running analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Running pass: LoopSimplifyPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: LCSSAPass on kernelforge_sat_i8_manual (76 instructions)
+Running analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Running analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Running pass: LICMPass on loop %vector.body in function kernelforge_sat_i8_manual
+Running pass: LICMPass on loop %vec.epilog.vector.body in function kernelforge_sat_i8_manual
+Running pass: LICMPass on loop %.lr.ph in function kernelforge_sat_i8_manual
+Running pass: AlignmentFromAssumptionsPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: LoopSinkPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: InstSimplifyPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: DivRemPairsPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: MergeICmpsPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: ExpandMemCmpPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: TailCallElimPass on kernelforge_sat_i8_manual (76 instructions)
+Running pass: SimplifyCFGPass on kernelforge_sat_i8_manual (76 instructions)
+Invalidating analysis: DominatorTreeAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: LoopAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: ScalarEvolutionAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: BasicAA on kernelforge_sat_i8_manual
+Invalidating analysis: AAManager on kernelforge_sat_i8_manual
+Invalidating analysis: LastRunTrackingAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: MemorySSAAnalysis on kernelforge_sat_i8_manual
+Invalidating analysis: InnerAnalysisManagerProxy<LoopAnalysisManager, Function> on kernelforge_sat_i8_manual
+Invalidating analysis: LazyCallGraphAnalysis on [module]
+Invalidating analysis: InnerAnalysisManagerProxy<CGSCCAnalysisManager, Module> on [module]
+Invalidating analysis: CallGraphAnalysis on [module]
+Running pass: AllocTokenPass on [module]
+Running pass: GlobalDCEPass on [module]
+Running pass: ConstantMergePass on [module]
+Running pass: CGProfilePass on [module]
+Running pass: RelLookupTableConverterPass on [module]
+Running pass: LowerCommentStringPass on [module]
+Running pass: AnnotationRemarksPass on kernelforge_sat_i8_manual (75 instructions)
+Running pass: VerifierPass on [module]
+Running analysis: VerifierAnalysis on [module]
+Running pass: PrintModulePass on [module]
