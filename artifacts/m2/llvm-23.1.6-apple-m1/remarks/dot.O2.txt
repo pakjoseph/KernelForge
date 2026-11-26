@@ -1,0 +1,3 @@
+kernels/dot.cpp:6:3: remark: vectorized loop (vectorization width: 4, interleaved count: 4) [-Rpass=loop-vectorize]
+    6 |   for (std::size_t i = 0; i < n; ++i)
+      |   ^

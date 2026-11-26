@@ -1,0 +1,11 @@
+remark: <unknown>:0:0: function=kernelforge_stencil loop trip-count=unknown loop-carried-dependence=not-analyzed
+remark: <unknown>:0:0: function=kernelforge_stencil access#0 load width=4 bytes address-space=0 stride=4 bytes/iteration
+remark: <unknown>:0:0: function=kernelforge_stencil access#1 load width=4 bytes address-space=0 stride=4 bytes/iteration
+remark: <unknown>:0:0: function=kernelforge_stencil access#2 load width=4 bytes address-space=0 stride=4 bytes/iteration
+remark: <unknown>:0:0: function=kernelforge_stencil access#3 store width=4 bytes address-space=0 stride=4 bytes/iteration
+remark: <unknown>:0:0: function=kernelforge_stencil alias access#0 access#1 = NoAlias
+remark: <unknown>:0:0: function=kernelforge_stencil alias access#0 access#2 = NoAlias
+remark: <unknown>:0:0: function=kernelforge_stencil alias access#0 access#3 = NoAlias
+remark: <unknown>:0:0: function=kernelforge_stencil alias access#1 access#2 = NoAlias
+remark: <unknown>:0:0: function=kernelforge_stencil alias access#1 access#3 = NoAlias
+remark: <unknown>:0:0: function=kernelforge_stencil alias access#2 access#3 = NoAlias

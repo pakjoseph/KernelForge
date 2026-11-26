@@ -1,0 +1,519 @@
+{
+  "project": "KernelForge M2 baseline",
+  "llvm_version_required": "23.1.6",
+  "tools": {
+    "clang": "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+    "clang_version": "Homebrew clang version 23.1.6",
+    "opt": "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+    "opt_version": "Homebrew LLVM version 23.1.6",
+    "plugin": "/Users/josephpak/KernelForge/build/KernelAccessReport.so"
+  },
+  "target": "arm64-apple-darwin25.6.0",
+  "cpu_tuning": "apple-m1",
+  "working_directory": "/Users/josephpak/KernelForge",
+  "machine": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "macos_version": "26.6.2",
+    "model_name": "MacBook Pro",
+    "model_identifier": "MacBookPro18,3",
+    "chip": "Apple M1 Pro"
+  },
+  "flags": {
+    "common": [
+      "-std=c++17",
+      "-target",
+      "arm64-apple-darwin25.6.0",
+      "-mcpu=apple-m1",
+      "-fno-fast-math",
+      "-I",
+      "kernels"
+    ],
+    "report_ir_frontend": [
+      "-O0",
+      "-Xclang",
+      "-disable-O0-optnone",
+      "-S",
+      "-emit-llvm"
+    ],
+    "report_ir_preparation": [
+      "-passes=mem2reg,loop-simplify",
+      "-verify-each"
+    ],
+    "optimized_ir_and_assembly": [
+      "-O2",
+      "-O3",
+      "-fno-fast-math"
+    ],
+    "vectorization_remarks": [
+      "-Rpass=loop-vectorize",
+      "-Rpass-missed=loop-vectorize",
+      "-Rpass-analysis=loop-vectorize"
+    ],
+    "fast_math": false
+  },
+  "correctness_build_flags": {
+    "kernels": [
+      "-O2",
+      "-O3",
+      "-fno-fast-math",
+      "-mcpu=apple-m1"
+    ],
+    "scalar_reference": [
+      "-O1",
+      "-fno-vectorize",
+      "-fno-slp-vectorize",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-mcpu=apple-m1"
+    ]
+  },
+  "correctness_workload_sizes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    15,
+    16,
+    17,
+    31,
+    32,
+    33,
+    63,
+    64,
+    65,
+    257,
+    4097
+  ],
+  "deterministic_inputs": {
+    "formula": "(int((uint32(i) * 37 + salt * 19) % 127) - 63) / 79.0f",
+    "salts": {
+      "saxpy_x": 3,
+      "saxpy_y": 11,
+      "stencil_input": 29
+    },
+    "saxpy_alpha": 0.73
+  },
+  "correctness_tolerance": {
+    "absolute": 0.0001,
+    "relative": 2e-05,
+    "formula": "abs(actual - expected) <= absolute + relative * abs(expected)"
+  },
+  "kernels": {
+    "saxpy": "out[i] = alpha * x[i] + y[i]",
+    "dot": "sequential floating-point sum of x[i] * y[i]",
+    "stencil": "copy endpoints; interior is (in[i-1] + in[i] + in[i+1]) / 3"
+  },
+  "commands": {
+    "saxpy": {
+      "report_ir_frontend": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+        "-std=c++17",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-I",
+        "kernels",
+        "-O0",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "-S",
+        "-emit-llvm",
+        "kernels/saxpy.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.frontend.ll"
+      ],
+      "prepare_report_ir": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=mem2reg,loop-simplify",
+        "-verify-each",
+        "-S",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.frontend.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.report-input.ll"
+      ],
+      "kernel_access_report": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-load-pass-plugin",
+        "/Users/josephpak/KernelForge/build/KernelAccessReport.so",
+        "-passes=kernel-access-report",
+        "-pass-remarks-analysis=kernel-access-report",
+        "-verify-each",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.report-input.ll"
+      ],
+      "optimization_levels": {
+        "O2": {
+          "optimized_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O2",
+            "-S",
+            "-emit-llvm",
+            "kernels/saxpy.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.O2.ll"
+          ],
+          "verify_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+            "-passes=verify",
+            "-disable-output",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.O2.ll"
+          ],
+          "assembly_and_vectorization_remarks": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O2",
+            "-Rpass=loop-vectorize",
+            "-Rpass-missed=loop-vectorize",
+            "-Rpass-analysis=loop-vectorize",
+            "-S",
+            "kernels/saxpy.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/assembly/saxpy.O2.s"
+          ]
+        },
+        "O3": {
+          "optimized_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O3",
+            "-S",
+            "-emit-llvm",
+            "kernels/saxpy.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.O3.ll"
+          ],
+          "verify_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+            "-passes=verify",
+            "-disable-output",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/saxpy.O3.ll"
+          ],
+          "assembly_and_vectorization_remarks": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O3",
+            "-Rpass=loop-vectorize",
+            "-Rpass-missed=loop-vectorize",
+            "-Rpass-analysis=loop-vectorize",
+            "-S",
+            "kernels/saxpy.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/assembly/saxpy.O3.s"
+          ]
+        }
+      }
+    },
+    "dot": {
+      "report_ir_frontend": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+        "-std=c++17",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-I",
+        "kernels",
+        "-O0",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "-S",
+        "-emit-llvm",
+        "kernels/dot.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.frontend.ll"
+      ],
+      "prepare_report_ir": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=mem2reg,loop-simplify",
+        "-verify-each",
+        "-S",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.frontend.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.report-input.ll"
+      ],
+      "kernel_access_report": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-load-pass-plugin",
+        "/Users/josephpak/KernelForge/build/KernelAccessReport.so",
+        "-passes=kernel-access-report",
+        "-pass-remarks-analysis=kernel-access-report",
+        "-verify-each",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.report-input.ll"
+      ],
+      "optimization_levels": {
+        "O2": {
+          "optimized_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O2",
+            "-S",
+            "-emit-llvm",
+            "kernels/dot.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.O2.ll"
+          ],
+          "verify_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+            "-passes=verify",
+            "-disable-output",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.O2.ll"
+          ],
+          "assembly_and_vectorization_remarks": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O2",
+            "-Rpass=loop-vectorize",
+            "-Rpass-missed=loop-vectorize",
+            "-Rpass-analysis=loop-vectorize",
+            "-S",
+            "kernels/dot.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/assembly/dot.O2.s"
+          ]
+        },
+        "O3": {
+          "optimized_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O3",
+            "-S",
+            "-emit-llvm",
+            "kernels/dot.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.O3.ll"
+          ],
+          "verify_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+            "-passes=verify",
+            "-disable-output",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/dot.O3.ll"
+          ],
+          "assembly_and_vectorization_remarks": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O3",
+            "-Rpass=loop-vectorize",
+            "-Rpass-missed=loop-vectorize",
+            "-Rpass-analysis=loop-vectorize",
+            "-S",
+            "kernels/dot.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/assembly/dot.O3.s"
+          ]
+        }
+      }
+    },
+    "stencil": {
+      "report_ir_frontend": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+        "-std=c++17",
+        "-target",
+        "arm64-apple-darwin25.6.0",
+        "-mcpu=apple-m1",
+        "-fno-fast-math",
+        "-I",
+        "kernels",
+        "-O0",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "-S",
+        "-emit-llvm",
+        "kernels/stencil.cpp",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.frontend.ll"
+      ],
+      "prepare_report_ir": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-passes=mem2reg,loop-simplify",
+        "-verify-each",
+        "-S",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.frontend.ll",
+        "-o",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.report-input.ll"
+      ],
+      "kernel_access_report": [
+        "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+        "-load-pass-plugin",
+        "/Users/josephpak/KernelForge/build/KernelAccessReport.so",
+        "-passes=kernel-access-report",
+        "-pass-remarks-analysis=kernel-access-report",
+        "-verify-each",
+        "-disable-output",
+        "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.report-input.ll"
+      ],
+      "optimization_levels": {
+        "O2": {
+          "optimized_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O2",
+            "-S",
+            "-emit-llvm",
+            "kernels/stencil.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.O2.ll"
+          ],
+          "verify_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+            "-passes=verify",
+            "-disable-output",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.O2.ll"
+          ],
+          "assembly_and_vectorization_remarks": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O2",
+            "-Rpass=loop-vectorize",
+            "-Rpass-missed=loop-vectorize",
+            "-Rpass-analysis=loop-vectorize",
+            "-S",
+            "kernels/stencil.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/assembly/stencil.O2.s"
+          ]
+        },
+        "O3": {
+          "optimized_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O3",
+            "-S",
+            "-emit-llvm",
+            "kernels/stencil.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.O3.ll"
+          ],
+          "verify_ir": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/opt",
+            "-passes=verify",
+            "-disable-output",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/ir/stencil.O3.ll"
+          ],
+          "assembly_and_vectorization_remarks": [
+            "/opt/homebrew/Cellar/llvm/23.1.6/bin/clang-23",
+            "-std=c++17",
+            "-target",
+            "arm64-apple-darwin25.6.0",
+            "-mcpu=apple-m1",
+            "-fno-fast-math",
+            "-I",
+            "kernels",
+            "-O3",
+            "-Rpass=loop-vectorize",
+            "-Rpass-missed=loop-vectorize",
+            "-Rpass-analysis=loop-vectorize",
+            "-S",
+            "kernels/stencil.cpp",
+            "-o",
+            "/Users/josephpak/KernelForge/artifacts/m2/llvm-23.1.6-apple-m1/assembly/stencil.O3.s"
+          ]
+        }
+      }
+    }
+  },
+  "generated_files": [
+    "assembly/dot.O2.s",
+    "assembly/dot.O3.s",
+    "assembly/saxpy.O2.s",
+    "assembly/saxpy.O3.s",
+    "assembly/stencil.O2.s",
+    "assembly/stencil.O3.s",
+    "ir/dot.O2.ll",
+    "ir/dot.O3.ll",
+    "ir/dot.frontend.ll",
+    "ir/dot.report-input.ll",
+    "ir/saxpy.O2.ll",
+    "ir/saxpy.O3.ll",
+    "ir/saxpy.frontend.ll",
+    "ir/saxpy.report-input.ll",
+    "ir/stencil.O2.ll",
+    "ir/stencil.O3.ll",
+    "ir/stencil.frontend.ll",
+    "ir/stencil.report-input.ll",
+    "remarks/dot.O2.txt",
+    "remarks/dot.O3.txt",
+    "remarks/saxpy.O2.txt",
+    "remarks/saxpy.O3.txt",
+    "remarks/stencil.O2.txt",
+    "remarks/stencil.O3.txt",
+    "reports/dot.txt",
+    "reports/saxpy.txt",
+    "reports/stencil.txt"
+  ],
+  "performance_measurements": "none; M2 generator and CTest do not time kernels"
+}
