@@ -71,7 +71,13 @@ def tool_version(path: pathlib.Path) -> str:
     output = result.stdout + result.stderr
     if not re.search(rf"(?<![0-9.]){re.escape(EXPECTED_LLVM)}(?![0-9.])", output):
         raise RuntimeError(f"{path} is not LLVM {EXPECTED_LLVM}:\n{output}")
-    return output.splitlines()[0]
+    first_line = output.splitlines()[0]
+    version_line = next(
+        line.strip()
+        for line in output.splitlines()
+        if re.search(rf"(?<![0-9.]){re.escape(EXPECTED_LLVM)}(?![0-9.])", line)
+    )
+    return first_line if EXPECTED_LLVM in first_line else f"{first_line} ({version_line})"
 
 
 def run_recorded(
@@ -245,7 +251,9 @@ def inspect_ir(path: pathlib.Path) -> dict[str, int]:
         "llvm_fptosi_sat_call_count": len(
             re.findall(r"\bcall\b[^\n]*@llvm\.fptosi\.sat", ir_text)
         ),
-        "fptosi_instruction_count": len(re.findall(r"\bfptosi\b", ir_text)),
+        "ordinary_fptosi_opcode_count": len(
+            re.findall(r"(?m)^\s*%[-a-zA-Z$._0-9]+\s*=\s*fptosi\b", ir_text)
+        ),
         "fcmp_instruction_count": len(re.findall(r"\bfcmp\b", ir_text)),
         "select_instruction_count": len(re.findall(r"\bselect\b", ir_text)),
     }
@@ -604,6 +612,7 @@ def main() -> None:
         "recorded_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "harness_commit": capture(["git", "rev-parse", "HEAD"]).stdout.strip(),
         "llvm_version_required": EXPECTED_LLVM,
+        "llvm_prefix": str(LLVM_PREFIX),
         "llvm_tools": versions,
         "target": TARGET,
         "cpu_tuning": CPU,
